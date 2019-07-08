@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Peter Leth - papupa.com</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div id="main">
+
+            <div id="head">
+                <img src="logo.svg" alt="Logo">
+                <div id="text">
+                    <div id="title">
+                        <h1>Peter Leth</h1>
+                        <h2>, kuff</h2>
+                    </div>
+                    <div id="subtitle">
+                        <p>Student @ Aalborg University</p>
+                        <p>Denmark</p>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="feed">
+                <p class="break"><a href="https://twitter.com/peterguldleth">@peterguldleth</a> on Twitter</p>
+                <p class="break"><a href="https://github.com/kuff">@kuff</a> on GitHub</p>
+
+                <section v-if="errored">
+                    <p>Unable to fetch data :(</p>
+                </section>
+                <section v-else>
+
+                    <div v-if="loading">
+                        <p>loading...</p>
+                    </div>
+                    <div v-else>
+                        Last active {{ response.data.timestamp }}
+                    </div>
+
+                </section>
+            </div>
+            
+            <div id="footer">
+                <p class="double-break">© Peter Leth, 2019</p>
+                <p>pgl-public@pm.me</p>
+            </div>
+        
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            new Vue({
+                el: "#feed",
+                data () {
+                    return {
+                        loading: true,
+                        errored: false,
+                        response: undefined
+                    }
+                },
+                mounted () {
+                    const agent = axios.create();
+                    agent.defaults.timeout = 5000;
+                    agent
+                        .get('http://localhost:8080/siteapi/getfeed')
+                        .then(response => {
+                            if (response.data.success) {
+                                this.response = response.data;
+                                this.loading = false;
+                            }
+                            else this.errored = true
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true;
+                        })
+                }
+            })
+        </script>
+    </body>
+</html>
