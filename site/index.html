@@ -64,7 +64,7 @@
                     const agent = axios.create();
                     agent.defaults.timeout = 5000;
                     agent
-                        .get('http://localhost:8080/siteapi/getfeed')
+                        .get('http://papupa.com/siteapi/getfeed')
                         .then(response => {
                             if (response.data.success) {
                                 this.response = response.data;
